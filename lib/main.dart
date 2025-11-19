@@ -1,17 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'core/routes/app_routes.dart';
 import 'core/routes/route_names.dart';
+import 'core/services/auth service/auth_checker.dart';
 import 'firebase_options.dart';
-import 'main_wrapper.dart';
-
-Future<String> getInitialRoute() async {
-  return await MainWrapper.getInitialRoute();
-}
 
 void main() async {
+  // CRITICAL: Must be called before any native plugins (like Firebase) are initialized
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Initialize Firebase using the generated configuration file
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -23,25 +22,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<String>(
-      future: getInitialRoute(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            ),
-          );
-        }
+    // MaterialApp establishes the fundamental framework and the router.
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Movies App',
+      // The 'home' property points to the AuthChecker, which handles
+      // dynamic routing (login/onboarding/home) based on user status.
+      home: const AuthChecker(),
 
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Movies App',
-          initialRoute: snapshot.data ?? RouteNames.splash,
-          onGenerateRoute: AppRoutes.generateRoute,
-        );
-      },
+      // onGenerateRoute defines how the app navigates between screens later
+      onGenerateRoute: AppRoutes.generateRoute,
     );
   }
 }

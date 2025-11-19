@@ -36,7 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   dio:
   animate_do:
-  shared_preferences:
+  shared_preferences: ^2.2.2
   animated_toggle_switch:
   google_sign_in: 6.2.1
   firebase_auth:

@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/modules/auth/pages/login_screen.dart';
 
 import '../../../core/theme/app colors/app_colors.dart';
 import '../../onboarding/pages/onboarding_screen.dart';

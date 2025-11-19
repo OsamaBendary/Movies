@@ -7,5 +7,6 @@ class RouteNames{
   static const register = '/register';
   static const layout = '/layout';
   static const home = '/home';
+  static const movieDetails = '/moviedetails';
 
 }

@@ -62,7 +62,7 @@ class _IntroScreenState extends State<IntroScreen> {
     await prefs.setBool(MainWrapper.onboardingKey, true);
 
     if (mounted) {
-      Navigator.of(context).pushReplacementNamed(RouteNames.splash);
+      Navigator.of(context).pushReplacementNamed(RouteNames.login);
     }
   }
 
