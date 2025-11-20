@@ -33,7 +33,7 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       case RouteNames.movieDetails:
         return MaterialPageRoute(builder: (_) => const MovieDetailsScreen());
-      case '/':
+      case RouteNames.authChecker:
         return MaterialPageRoute(builder: (_) => const AuthChecker());
 
       default:

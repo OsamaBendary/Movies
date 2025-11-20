@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../../core/routes/route_names.dart';
 import '../../../core/services/auth service/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import '../../../core/theme/app colors/app_colors.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -20,20 +19,66 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _rePasswordController = TextEditingController();
   final _authService = FireAuth();
 
+  final List<String> avatars = [
+    "assets/prof pics/1.png",
+    "assets/prof pics/2.png",
+    "assets/prof pics/3.png",
+    "assets/prof pics/4.png",
+    "assets/prof pics/5.png",
+    "assets/prof pics/6.png",
+    "assets/prof pics/7.png",
+    "assets/prof pics/8.png",
+    "assets/prof pics/9.png",
+  ];
+
+  late PageController _pageController;
+  double _currentPageOffset = 0.0;
+  int _currentPageIndex = 0;
+
   bool obscure = true;
   bool _isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+
+    _pageController = PageController(viewportFraction: 0.45, initialPage: 0);
+    _pageController.addListener(_pageListener);
+  }
+
+  void _pageListener() {
+    if (mounted) {
+      setState(() {
+        _currentPageOffset = _pageController.page ?? 0.0;
+        _currentPageIndex = _currentPageOffset.round();
+      });
+    }
+  }
+
+  @override
   void dispose() {
+    _pageController.removeListener(_pageListener);
     _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _rePasswordController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
   void _submit() async {
     if (!_formKey.currentState!.validate()) {
+      final user = FirebaseAuth.instance.currentUser;
+      String selectedAvatarPath = 'your_selected_path_variable';
+
+      if (user != null) {
+        try {
+          await user.updatePhotoURL(selectedAvatarPath);
+          print('Avatar path saved successfully: $selectedAvatarPath');
+        } on FirebaseAuthException catch (e) {
+          print('Error updating profile: ${e.message}');
+        }
+      }
       return;
     }
 
@@ -52,11 +97,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final password = _passwordController.text.trim();
     final username = _usernameController.text.trim();
 
+    final selectedAvatar = avatars[_currentPageIndex];
+
     try {
       await _authService.signUp(email, password);
 
-      if (FirebaseAuth.instance.currentUser != null) {
-        await FirebaseAuth.instance.currentUser!.updateDisplayName(username);
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await user.updateDisplayName(username);
+        await user.updatePhotoURL(selectedAvatar);
       }
 
       if (mounted) {
@@ -81,7 +130,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('An unexpected error occurred.')),
+          const SnackBar(content: Text('An unexpected error occurred.')),
         );
       }
     } finally {
@@ -91,6 +140,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
         });
       }
     }
+  }
+
+  Widget _buildAvatar(int index) {
+    final path = avatars[index];
+
+    double pageOffset =
+        _pageController.hasClients && _pageController.page != null
+        ? _pageController.page!
+        : index.toDouble();
+
+    double difference = (index - pageOffset).abs();
+
+    double scale = (1.0 - (difference * 0.4)).clamp(0.7, 1.0);
+    return Transform.scale(
+      scale: scale,
+      alignment: Alignment.center,
+      child: GestureDetector(
+        onTap: () {
+          _pageController.animateToPage(
+            index,
+
+            duration: const Duration(milliseconds: 300),
+
+            curve: Curves.easeOut,
+          );
+        },
+        child: SizedBox(
+          width: 158,
+          height: 161,
+          child: Image(image: AssetImage(path), fit: BoxFit.cover),
+        ),
+      ),
+    );
   }
 
   @override
@@ -124,13 +206,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 67),
-                Center(
-                  child:
-                  Image.asset("assets/logos/logo.png", scale: 0.5,),
+                const SizedBox(height: 9),
+
+                SizedBox(
+                  height: 169,
+                  child: PageView.builder(
+                    controller: _pageController,
+                    itemCount: avatars.length,
+                    itemBuilder: (context, index) {
+                      return _buildAvatar(index);
+                    },
+                  ),
                 ),
 
-                const SizedBox(height: 69),
+                const SizedBox(height: 41),
+
 
                 TextFormField(
                   controller: _usernameController,
@@ -151,9 +241,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     hintTextDirection: TextDirection.ltr,
                     prefixIconColor: Colors.grey,
-                      fillColor: AppColors.grey,
-                      filled: true,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16))
+                    fillColor: AppColors.grey,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -182,9 +274,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     hintTextDirection: TextDirection.ltr,
                     prefixIconColor: Colors.grey,
-                      fillColor: AppColors.grey,
-                      filled: true,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16))
+                    fillColor: AppColors.grey,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                 ),
 
@@ -227,9 +321,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     hintTextDirection: TextDirection.ltr,
                     prefixIconColor: Colors.grey,
                     suffixIconColor: Colors.grey,
-                      fillColor: AppColors.grey,
-                      filled: true,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16))
+                    fillColor: AppColors.grey,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                 ),
 
@@ -269,9 +365,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     hintTextDirection: TextDirection.ltr,
                     prefixIconColor: Colors.grey,
                     suffixIconColor: Colors.grey,
-                      fillColor: AppColors.grey,
-                      filled: true,
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16))
+                    fillColor: AppColors.grey,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                 ),
 
@@ -290,9 +388,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
-                        : Text(
+                        : const Text(
                             "Register",
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
                               fontWeight: FontWeight.w500,
@@ -331,4 +429,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         ),
       ),
-    );}}
+    );
+  }
+}

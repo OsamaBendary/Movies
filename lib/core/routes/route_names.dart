@@ -1,5 +1,6 @@
 class RouteNames{
-  static const splash = '/';
+  static const authChecker = '/authChecker';
+  static const splash = '/splash';
   static const onboarding = '/onboarding';
   static const intro = '/intro';
   static const login = '/login';

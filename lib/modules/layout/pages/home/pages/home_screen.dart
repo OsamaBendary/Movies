@@ -5,6 +5,16 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column();
+    return Container(
+      height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(image: AssetImage("assets/images/Home (1).png"), fit: BoxFit.cover)
+        ),
+        child: Column(
+          children: [
+
+          ],
+        ));
   }
 }

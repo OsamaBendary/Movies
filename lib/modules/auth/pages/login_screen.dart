@@ -2,6 +2,7 @@ import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:movies/modules/auth/pages/register_screen.dart';
 import '../../../core/routes/route_names.dart';
 import '../../../core/services/auth service/auth_service.dart';
 import '../../../core/theme/app colors/app_colors.dart';
@@ -260,7 +261,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, RouteNames.register);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen(),));
                       },
                       child: Text(
                        "Create Account",

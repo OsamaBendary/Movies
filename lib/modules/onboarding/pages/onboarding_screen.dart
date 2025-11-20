@@ -32,7 +32,7 @@ class OnboardingScreen extends StatelessWidget {
                   Text("Get access to a huge library of movies\n to suit all tastes. You will surely like it.", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w400, fontSize: 20,), textAlign: TextAlign.center,),
                   SizedBox(height: 24,),
                   CustomButton(color:  AppColors.yellow, text: "Explore Now", textColor: AppColors.black, onPressed: (){
-                        Navigator.pushNamed(context, RouteNames.intro);
+                       Navigator.push(context, MaterialPageRoute(builder: (context) => IntroScreen()));
                   },)
             ]),
           ),
