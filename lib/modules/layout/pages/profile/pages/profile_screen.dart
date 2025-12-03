@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:movies/core/services/auth%20service/auth_service.dart';
 import 'package:movies/core/theme/app%20colors/app_colors.dart';
-import 'package:movies/core/widgets/custom_button/custom_button.dart';
+import 'package:movies/modules/layout/pages/profile/pages/edit_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final _authService = FireAuth();
     return Column(
       children: [
         Container(
@@ -26,7 +27,7 @@ class ProfileScreen extends StatelessWidget {
                       SizedBox(
                           height: 124,
                           width: 124,
-                          child: Image(image: AssetImage(FireAuth.user!.photoURL!), fit: BoxFit.cover,)),
+                          child: Image(image: AssetImage(FireAuth.user!.photoURL?? ""), fit: BoxFit.cover,)),
                       SizedBox(height: 15,),
                       Text(FireAuth.user!.displayName!, style: TextStyle(color: AppColors.white, fontSize: 20, fontWeight: FontWeight.bold),)
                     ],
@@ -59,7 +60,9 @@ class ProfileScreen extends StatelessWidget {
                       color: AppColors.yellow,
                       padding: const EdgeInsets.all(16),
                       child: Text("Edit Profile", style: TextStyle(color: AppColors.black, fontSize: 20, fontWeight: FontWeight.w500),),
-                      onPressed: (){},
+                      onPressed: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => EditScreen(),));
+                      },
 
                     ),
                   ),
@@ -79,7 +82,9 @@ class ProfileScreen extends StatelessWidget {
                           Icon(Icons.exit_to_app, color: AppColors.white,)
                         ],
                       ),
-                      onPressed: (){},
+                      onPressed: (){
+                        _authService.signOut();
+                      },
                     ),
                   ),
                 ],

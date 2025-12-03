@@ -17,7 +17,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _rePasswordController = TextEditingController();
-  final _authService = FireAuth();
+  final _numberController = TextEditingController();  final _authService = FireAuth();
 
   final List<String> avatars = [
     "assets/prof pics/1.png",
@@ -63,6 +63,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _passwordController.dispose();
     _rePasswordController.dispose();
     _pageController.dispose();
+    _numberController.dispose();
     super.dispose();
   }
 
@@ -96,6 +97,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
     final username = _usernameController.text.trim();
+    final number = _numberController.text.trim();
 
     final selectedAvatar = avatars[_currentPageIndex];
 
@@ -106,6 +108,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (user != null) {
         await user.updateDisplayName(username);
         await user.updatePhotoURL(selectedAvatar);
+        await user.updatePhoneNumber(number as PhoneAuthCredential);
       }
 
       if (mounted) {
@@ -375,6 +378,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 const SizedBox(height: 24),
 
+                TextFormField(
+                  controller: _numberController,
+                  validator: (value) {
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Phone Number is required";
+                      } else if (!RegExp(
+                        r'^(?:(00201|\+201)|01)[0-2,5][0-9]{8}$',
+                      ).hasMatch(value)) {
+                        return "Enter a valid Phone Number";
+                      }
+                      return null;
+                    };
+                  },
+                  style: TextStyle(color: AppColors.white),
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.call),
+                    hintText: "Mobile Number",
+                    hintStyle: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    hintTextDirection: TextDirection.ltr,
+                    prefixIconColor: Colors.grey,
+                    fillColor: AppColors.grey,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -398,6 +436,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                   ),
                 ),
+
+
 
                 const SizedBox(height: 8),
 

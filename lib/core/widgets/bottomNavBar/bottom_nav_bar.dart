@@ -12,7 +12,7 @@ class BottomNavBar extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 9.0, left: 9.0, right:9.0),
       child: Container(
-        height: 61,
+        height: 89,
         decoration: BoxDecoration(
           color: AppColors.grey,
           borderRadius: BorderRadius.circular(12.0),

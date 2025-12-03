@@ -4,7 +4,7 @@ class ApiResult {
   final String status;
   final String statusMessage;
   final int movieCount;
-  final List<Movie> movies;
+  final List<Movies> movies;
 
   ApiResult({
     required this.status,
@@ -17,7 +17,7 @@ class ApiResult {
     final data = json['data'] as Map<String, dynamic>;
 
     final moviesList = (data['movies'] as List<dynamic>)
-        .map((movieJson) => Movie.fromJson(movieJson as Map<String, dynamic>))
+        .map((movieJson) => Movies.fromJson(movieJson as Map<String, dynamic>))
         .toList();
 
     return ApiResult(

@@ -31,8 +31,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const LayoutScreen());
       case RouteNames.home:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
-      case RouteNames.movieDetails:
-        return MaterialPageRoute(builder: (_) => const MovieDetailsScreen());
+      //case RouteNames.movieDetails:
+        //return MaterialPageRoute(builder: (_) => const MovieDetailsScreen());
       case RouteNames.authChecker:
         return MaterialPageRoute(builder: (_) => const AuthChecker());
 
